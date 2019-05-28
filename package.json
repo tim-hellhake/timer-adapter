@@ -1,0 +1,70 @@
+{
+  "name": "timer-adapter",
+  "display_name": "Timer",
+  "version": "0.1.0",
+  "description": "Runs for the specified number of seconds",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tim-hellhake/timer-adapter.git"
+  },
+  "author": "Tim Hellhake",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/tim-hellhake/timer-adapter/issues"
+  },
+  "homepage": "https://github.com/tim-hellhake/timer-adapter#readme",
+  "files": [
+    "LICENSE",
+    "SHA256SUMS",
+    "index.js",
+    "timer-adapter.js"
+  ],
+  "moziot": {
+    "api": {
+      "min": 2,
+      "max": 2
+    },
+    "plugin": true,
+    "exec": "{nodeLoader} {path}",
+    "schema": {
+      "type": "object",
+      "required": [
+        "timers"
+      ],
+      "properties": {
+        "timers": {
+          "type": "array",
+          "title": "List of timers",
+          "items": {
+            "type": "object",
+            "title": "A Timer",
+            "required": [
+              "name",
+              "seconds"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "title": "The name of the timer"
+              },
+              "seconds": {
+                "type": "string",
+                "title": "The number of seconds after which the timer should elapse"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.16.0"
+  }
+}
