@@ -27,12 +27,25 @@ class Timer extends Device {
       readOnly: true
     });
 
+    const runningProperty = this.createProperty({
+      type: 'boolean',
+      title: 'running',
+      description: 'Whether the timer is currently running',
+      readOnly: true
+    });
+
     this.addCallbackAction('start', 'Start the timer', () => {
       if (!this.timerHandle) {
         console.log(`Starting timer ${timer.name}`);
+        runningProperty.setCachedValue(true);
+        this.notifyPropertyChanged(runningProperty);
+
         this.timerHandle = setTimeout(() => {
           finishedProperty.setCachedValue(true);
           this.notifyPropertyChanged(finishedProperty);
+
+          runningProperty.setCachedValue(false);
+          this.notifyPropertyChanged(runningProperty);
         }, timer.seconds * 1000);
       }
     });
@@ -42,6 +55,9 @@ class Timer extends Device {
         console.log(`Resetting timer ${timer.name}`);
         clearTimeout(this.timerHandle);
         this.timerHandle = null;
+
+        runningProperty.setCachedValue(false);
+        this.notifyPropertyChanged(runningProperty);
       }
 
       finishedProperty.setCachedValue(false);
