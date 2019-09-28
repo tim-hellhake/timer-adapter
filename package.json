@@ -22,7 +22,8 @@
     "LICENSE",
     "SHA256SUMS",
     "index.js",
-    "timer-adapter.js"
+    "timer-adapter.js",
+    "manifest.json"
   ],
   "moziot": {
     "api": {

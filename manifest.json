@@ -1,0 +1,51 @@
+{
+  "id": "timer-adapter",
+  "name": "Timer",
+  "short_name": "Timer",
+  "version": "0.2.0",
+  "description": "Runs for the specified number of seconds",
+  "homepage_url": "https://github.com/tim-hellhake/timer-adapter#readme",
+  "author": "Tim Hellhake",
+  "license": "MPL-2.0",
+  "manifest_version": 1,
+  "gateway_specific_settings": {
+    "webthings": {
+      "exec": "{nodeLoader} {path}",
+      "primary_type": "adapter",
+      "strict_max_version": "*",
+      "strict_min_version": "0.10.0"
+    }
+  },
+  "options": {
+    "schema": {
+      "properties": {
+        "timers": {
+          "items": {
+            "properties": {
+              "name": {
+                "title": "The name of the timer",
+                "type": "string"
+              },
+              "seconds": {
+                "title": "The number of seconds after which the timer should elapse",
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "seconds"
+            ],
+            "title": "A Timer",
+            "type": "object"
+          },
+          "title": "List of timers",
+          "type": "array"
+        }
+      },
+      "required": [
+        "timers"
+      ],
+      "type": "object"
+    }
+  }
+}
