@@ -9,7 +9,8 @@
 const {
   Adapter,
   Device,
-  Property
+  Property,
+  Event
 } = require('gateway-addon');
 
 class Timer extends Device {
@@ -95,6 +96,42 @@ class Timer extends Device {
   }
 }
 
+class Interval extends Device {
+  constructor(adapter, manifest, interval) {
+    super(adapter, interval.name);
+    this['@context'] = 'https://iot.mozilla.org/schemas/';
+    this.name = interval.name;
+    this.description = manifest.description;
+    this.callbacks = {};
+
+    const active = this.createProperty({
+      type: 'boolean',
+      title: 'active',
+      description: 'Whether the interval is active'
+    });
+
+    this.events.set('elapsed', {
+      name: 'elapsed',
+      metadata: {
+        description: 'Interval elapsed',
+        type: 'string'
+      }
+    });
+
+    setInterval(() => {
+      if (active.value == true) {
+        this.eventNotify(new Event(this, 'elapsed'));
+      }
+    }, interval.seconds * 1000);
+  }
+
+  createProperty(description) {
+    const property = new Property(this, description.title, description);
+    this.properties.set(description.title, property);
+    return property;
+  }
+}
+
 class TimerAdapter extends Adapter {
   constructor(addonManager, manifest) {
     super(addonManager, TimerAdapter.name, manifest.name);
@@ -104,6 +141,15 @@ class TimerAdapter extends Adapter {
     if (timers) {
       for (const timer of timers) {
         const device = new Timer(this, manifest, timer);
+        this.handleDeviceAdded(device);
+      }
+    }
+
+    const intervals = manifest.moziot.config.intervals;
+
+    if (intervals) {
+      for (const interval of intervals) {
+        const device = new Interval(this, manifest, interval);
         this.handleDeviceAdded(device);
       }
     }

@@ -59,6 +59,28 @@
               }
             }
           }
+        },
+        "intervals": {
+          "type": "array",
+          "title": "List of intervals",
+          "items": {
+            "type": "object",
+            "title": "An interval",
+            "required": [
+              "name",
+              "seconds"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "title": "The name of the interval"
+              },
+              "seconds": {
+                "type": "string",
+                "title": "The number of seconds after which the interval should elapse"
+              }
+            }
+          }
         }
       }
     }
