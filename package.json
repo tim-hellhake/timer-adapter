@@ -53,6 +53,11 @@
                 "type": "string",
                 "title": "The name of the timer"
               },
+              "id": {
+                "type": "string",
+                "title": "The ID of the timer (will be generated for you)",
+                "readOnly": true
+              },
               "seconds": {
                 "type": "string",
                 "title": "The number of seconds after which the timer should elapse"
@@ -74,6 +79,11 @@
               "name": {
                 "type": "string",
                 "title": "The name of the interval"
+              },
+              "id": {
+                "type": "string",
+                "title": "The ID of the interval (will be generated for you)",
+                "readOnly": true
               },
               "seconds": {
                 "type": "string",

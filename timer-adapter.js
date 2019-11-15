@@ -8,14 +8,17 @@
 
 const {
   Adapter,
+  Database,
   Device,
   Property,
   Event
 } = require('gateway-addon');
+const crypto = require('crypto');
+const manifest = require('./manifest.json');
 
 class Timer extends Device {
-  constructor(adapter, manifest, timer) {
-    super(adapter, timer.name);
+  constructor(adapter, timer) {
+    super(adapter, `timer-${timer.id}`);
     this['@context'] = 'https://iot.mozilla.org/schemas/';
     this.name = timer.name;
     this.description = manifest.description;
@@ -97,8 +100,8 @@ class Timer extends Device {
 }
 
 class Interval extends Device {
-  constructor(adapter, manifest, interval) {
-    super(adapter, interval.name);
+  constructor(adapter, interval) {
+    super(adapter, `interval-${interval.id}`);
     this['@context'] = 'https://iot.mozilla.org/schemas/';
     this.name = interval.name;
     this.description = manifest.description;
@@ -133,26 +136,38 @@ class Interval extends Device {
 }
 
 class TimerAdapter extends Adapter {
-  constructor(addonManager, manifest) {
-    super(addonManager, TimerAdapter.name, manifest.name);
+  constructor(addonManager) {
+    super(addonManager, TimerAdapter.name, manifest.id);
     addonManager.addAdapter(this);
-    const timers = manifest.moziot.config.timers;
 
-    if (timers) {
-      for (const timer of timers) {
-        const device = new Timer(this, manifest, timer);
-        this.handleDeviceAdded(device);
+    const db = new Database(manifest.id);
+    db.open().then(() => {
+      return db.loadConfig();
+    }).then((config) => {
+      if (config.timers) {
+        for (const timer of config.timers) {
+          if (!timer.id) {
+            timer.id = `${crypto.randomBytes(16).toString('hex')}`;
+          }
+
+          const device = new Timer(this, timer);
+          this.handleDeviceAdded(device);
+        }
       }
-    }
 
-    const intervals = manifest.moziot.config.intervals;
+      if (config.intervals) {
+        for (const interval of config.intervals) {
+          if (!interval.id) {
+            interval.id = `${crypto.randomBytes(16).toString('hex')}`;
+          }
 
-    if (intervals) {
-      for (const interval of intervals) {
-        const device = new Interval(this, manifest, interval);
-        this.handleDeviceAdded(device);
+          const device = new Interval(this, interval);
+          this.handleDeviceAdded(device);
+        }
       }
-    }
+
+      return db.saveConfig(config);
+    }).catch(console.error);
   }
 }
 

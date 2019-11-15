@@ -8,5 +8,4 @@
 
 const TimerAdapter = require('./timer-adapter');
 
-module.exports =
-    (addonManager, manifest) => new TimerAdapter(addonManager, manifest);
+module.exports = (addonManager) => new TimerAdapter(addonManager);
