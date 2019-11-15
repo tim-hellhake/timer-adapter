@@ -107,12 +107,6 @@ class Interval extends Device {
     this.description = manifest.description;
     this.callbacks = {};
 
-    const active = this.createProperty({
-      type: 'boolean',
-      title: 'active',
-      description: 'Whether the interval is active'
-    });
-
     this.events.set('elapsed', {
       name: 'elapsed',
       metadata: {
@@ -122,9 +116,7 @@ class Interval extends Device {
     });
 
     setInterval(() => {
-      if (active.value == true) {
-        this.eventNotify(new Event(this, 'elapsed'));
-      }
+      this.eventNotify(new Event(this, 'elapsed'));
     }, interval.seconds * 1000);
   }
 
