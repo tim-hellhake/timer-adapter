@@ -6,6 +6,6 @@
 
 'use strict';
 
-const TimerAdapter = require('./timer-adapter');
+import { TimerAdapter } from './timer-adapter';
 
-module.exports = (addonManager) => new TimerAdapter(addonManager);
+export = (addonManager: any) => new TimerAdapter(addonManager);

@@ -6,18 +6,28 @@
 
 'use strict';
 
-const {
-  Adapter,
-  Database,
-  Device,
-  Property,
-  Event
-} = require('gateway-addon');
+import { Adapter, Device, Property, Event, Database } from 'gateway-addon';
+
 const crypto = require('crypto');
-const manifest = require('./manifest.json');
+const manifest = require('../manifest.json');
+
+interface TimerConfig {
+  id: string;
+  name: string;
+  seconds: number;
+}
+
+interface IntervalConfig {
+  id: string;
+  name: string;
+  seconds: number;
+}
 
 class Timer extends Device {
-  constructor(adapter, timer) {
+  private callbacks: { [name: string]: () => void } = {};
+  private timerHandle?: NodeJS.Timeout;
+
+  constructor(adapter: Adapter, timer: TimerConfig) {
     super(adapter, `timer-${timer.id}`);
     this['@context'] = 'https://iot.mozilla.org/schemas/';
     this.name = timer.name;
@@ -58,7 +68,7 @@ class Timer extends Device {
       if (this.timerHandle) {
         console.log(`Resetting timer ${timer.name}`);
         clearTimeout(this.timerHandle);
-        this.timerHandle = null;
+        this.timerHandle = undefined;
 
         runningProperty.setCachedValue(false);
         this.notifyPropertyChanged(runningProperty);
@@ -69,13 +79,13 @@ class Timer extends Device {
     });
   }
 
-  createProperty(description) {
+  createProperty(description: any) {
     const property = new Property(this, description.title, description);
     this.properties.set(description.title, property);
     return property;
   }
 
-  addCallbackAction(title, description, callback) {
+  addCallbackAction(title: string, description: string, callback: () => void) {
     this.addAction(title, {
       title,
       description
@@ -84,7 +94,7 @@ class Timer extends Device {
     this.callbacks[title] = callback;
   }
 
-  async performAction(action) {
+  async performAction(action: any) {
     action.start();
 
     const callback = this.callbacks[action.name];
@@ -100,12 +110,11 @@ class Timer extends Device {
 }
 
 class Interval extends Device {
-  constructor(adapter, interval) {
+  constructor(adapter: Adapter, interval: IntervalConfig) {
     super(adapter, `interval-${interval.id}`);
     this['@context'] = 'https://iot.mozilla.org/schemas/';
     this.name = interval.name;
     this.description = manifest.description;
-    this.callbacks = {};
 
     this.events.set('elapsed', {
       name: 'elapsed',
@@ -120,15 +129,15 @@ class Interval extends Device {
     }, interval.seconds * 1000);
   }
 
-  createProperty(description) {
+  createProperty(description: any) {
     const property = new Property(this, description.title, description);
     this.properties.set(description.title, property);
     return property;
   }
 }
 
-class TimerAdapter extends Adapter {
-  constructor(addonManager) {
+export class TimerAdapter extends Adapter {
+  constructor(addonManager: any) {
     super(addonManager, TimerAdapter.name, manifest.id);
     addonManager.addAdapter(this);
 
@@ -162,5 +171,3 @@ class TimerAdapter extends Adapter {
     }).catch(console.error);
   }
 }
-
-module.exports = TimerAdapter;

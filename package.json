@@ -3,10 +3,10 @@
   "display_name": "Timer",
   "version": "1.0.0",
   "description": "Runs for the specified number of seconds",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint ."
+    "build": "tsc -p ."
   },
   "repository": {
     "type": "git",
@@ -21,8 +21,8 @@
   "files": [
     "LICENSE",
     "SHA256SUMS",
-    "index.js",
-    "timer-adapter.js",
+    "lib/index.js",
+    "lib/timer-adapter.js",
     "manifest.json"
   ],
   "moziot": {
@@ -97,7 +97,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "babel-eslint": "^10.0.3",
-    "eslint": "^6.5.0"
+    "@types/twitter": "^1.7.0",
+    "typescript": "^3.7.2"
   }
 }
