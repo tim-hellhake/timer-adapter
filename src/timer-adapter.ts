@@ -34,6 +34,7 @@ class Timer extends Device {
   constructor(adapter: Adapter, private timer: TimerConfig) {
     super(adapter, `timer-${timer.id}`);
     this['@context'] = 'https://iot.mozilla.org/schemas/';
+    this['@type'] = ['MultiLevelSensor'];
     this.name = timer.name;
     this.description = manifest.description;
 
@@ -164,6 +165,7 @@ class Interval extends Device {
   constructor(adapter: Adapter, private interval: IntervalConfig) {
     super(adapter, `interval-${interval.id}`);
     this['@context'] = 'https://iot.mozilla.org/schemas/';
+    this['@type'] = ['MultiLevelSensor'];
     this.name = interval.name;
     this.description = manifest.description;
 
