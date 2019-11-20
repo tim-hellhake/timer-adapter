@@ -97,7 +97,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@types/twitter": "^1.7.0",
+    "@types/node": "^12.12.11",
     "typescript": "^3.7.2"
   }
 }
