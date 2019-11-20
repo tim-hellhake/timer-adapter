@@ -66,6 +66,10 @@ class Timer extends Device {
       this.start();
     });
 
+    this.addCallbackAction('restart', 'Restart the timer', () => {
+      this.restart();
+    });
+
     this.addCallbackAction('reset', 'Reset the timer', () => {
       this.reset();
     });
@@ -125,6 +129,11 @@ class Timer extends Device {
         this.tick();
       }, 1000);
     }
+  }
+
+  private restart() {
+    this.reset();
+    this.start();
   }
 
   private reset() {
