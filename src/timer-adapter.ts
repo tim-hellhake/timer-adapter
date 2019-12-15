@@ -228,37 +228,58 @@ class Interval extends Device {
 }
 
 export class TimerAdapter extends Adapter {
+  private timers: { [key: string]: Timer } = {};
+  private intervals: { [key: string]: Interval } = {};
+
   constructor(addonManager: any) {
     super(addonManager, TimerAdapter.name, manifest.id);
     addonManager.addAdapter(this);
+    this.load();
+    this.advertise();
+  }
 
+  public startPairing(_timeoutSeconds: number) {
+    console.log('Start pairing');
+    this.advertise();
+  }
+
+  private async load() {
     const db = new Database(manifest.id);
-    db.open().then(() => {
-      return db.loadConfig();
-    }).then((config) => {
-      if (config.timers) {
-        for (const timer of config.timers) {
-          if (!timer.id) {
-            timer.id = `${crypto.randomBytes(16).toString('hex')}`;
-          }
+    await db.open();
+    const config = await db.loadConfig();
 
-          const device = new Timer(this, timer);
-          this.handleDeviceAdded(device);
+    if (config.timers) {
+      for (const timer of config.timers) {
+        if (!timer.id) {
+          timer.id = `${crypto.randomBytes(16).toString('hex')}`;
         }
+
+        this.timers[timer.id] = new Timer(this, timer);
       }
+    }
 
-      if (config.intervals) {
-        for (const interval of config.intervals) {
-          if (!interval.id) {
-            interval.id = `${crypto.randomBytes(16).toString('hex')}`;
-          }
-
-          const device = new Interval(this, interval);
-          this.handleDeviceAdded(device);
+    if (config.intervals) {
+      for (const interval of config.intervals) {
+        if (!interval.id) {
+          interval.id = `${crypto.randomBytes(16).toString('hex')}`;
         }
-      }
 
-      return db.saveConfig(config);
-    }).catch(console.error);
+        this.intervals[interval.id] = new Interval(this, interval);
+      }
+    }
+
+    await db.saveConfig(config);
+  }
+
+  private advertise() {
+    for (let id in this.timers) {
+      const timer = this.timers[id];
+      this.handleDeviceAdded(timer);
+    }
+
+    for (let id in this.intervals) {
+      const interval = this.intervals[id];
+      this.handleDeviceAdded(interval);
+    }
   }
 }
