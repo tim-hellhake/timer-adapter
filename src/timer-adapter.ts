@@ -105,19 +105,16 @@ class Timer extends Device {
   }
 
   private setFinished(value: boolean) {
-    this.finishedProperty.setCachedValue(value);
-    this.notifyPropertyChanged(this.finishedProperty);
+    this.finishedProperty.setCachedValueAndNotify(value);
   }
 
   private setRunning(value: boolean) {
-    this.runningProperty.setCachedValue(value);
-    this.notifyPropertyChanged(this.runningProperty);
+    this.runningProperty.setCachedValueAndNotify(value);
   }
 
   private setSeconds(value: number) {
     this.seconds = value;
-    this.secondsProperty.setCachedValue(value);
-    this.notifyPropertyChanged(this.secondsProperty);
+    this.secondsProperty.setCachedValueAndNotify(value);
   }
 
   private start() {
@@ -208,8 +205,7 @@ class Interval extends Device {
   }
 
   private setSeconds(value: number) {
-    this.secondsProperty.setCachedValue(value);
-    this.notifyPropertyChanged(this.secondsProperty);
+    this.secondsProperty.setCachedValueAndNotify(value);
   }
 
   private tick() {
