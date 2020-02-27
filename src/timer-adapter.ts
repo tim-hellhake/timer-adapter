@@ -230,8 +230,12 @@ export class TimerAdapter extends Adapter {
   constructor(addonManager: any) {
     super(addonManager, TimerAdapter.name, manifest.id);
     addonManager.addAdapter(this);
-    this.load();
-    this.advertise();
+    this.start();
+  }
+
+  private async start() {
+    await this.load();
+    await this.advertise();
   }
 
   public startPairing(_timeoutSeconds: number) {
