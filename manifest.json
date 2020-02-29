@@ -72,6 +72,16 @@
               }
             }
           }
+        },
+        "logging": {
+          "type": "object",
+          "title": "Log settings",
+          "properties": {
+            "debug": {
+              "title": "Enable debug logs",
+              "type": "boolean"
+            }
+          }
         }
       },
       "required": [

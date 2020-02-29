@@ -8,4 +8,4 @@
 
 import { TimerAdapter } from './timer-adapter';
 
-export = (addonManager: any) => new TimerAdapter(addonManager);
+export = (addonManager: any, manifest: any) => new TimerAdapter(addonManager, manifest);

@@ -8,6 +8,8 @@
 
 import { Adapter, Device, Property, Event, Database } from 'gateway-addon';
 
+let debug: (message?: any, ...optionalParams: any[]) => void = () => { }
+
 const crypto = require('crypto');
 const manifest = require('../manifest.json');
 
@@ -119,7 +121,7 @@ class Timer extends Device {
 
   private start() {
     if (!this.timerHandle) {
-      console.log(`Starting timer ${this.timer.name}`);
+      debug(`Starting timer ${this.timer.name}`);
       this.setRunning(true);
 
       this.timerHandle = setInterval(() => {
@@ -135,7 +137,7 @@ class Timer extends Device {
 
   private reset() {
     if (this.timerHandle) {
-      console.log(`Resetting timer ${this.timer.name}`);
+      debug(`Resetting timer ${this.timer.name}`);
       clearTimeout(this.timerHandle);
       this.timerHandle = undefined;
     }
@@ -227,8 +229,17 @@ export class TimerAdapter extends Adapter {
   private timers: { [key: string]: Timer } = {};
   private intervals: { [key: string]: Interval } = {};
 
-  constructor(addonManager: any) {
+  constructor(addonManager: any, manifest: any) {
     super(addonManager, TimerAdapter.name, manifest.id);
+
+    const {
+      logging
+    } = manifest.moziot.config;
+
+    if (logging.debug === true) {
+      debug = console.log;
+    }
+
     addonManager.addAdapter(this);
     this.start();
   }
@@ -239,7 +250,7 @@ export class TimerAdapter extends Adapter {
   }
 
   public startPairing(_timeoutSeconds: number) {
-    console.log('Start pairing');
+    debug('Start pairing');
     this.advertise();
   }
 
