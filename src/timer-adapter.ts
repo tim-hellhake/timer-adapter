@@ -131,6 +131,7 @@ class Timer extends Device {
   }
 
   private restart() {
+    debug(`Restarting timer ${this.timer.name}`);
     this.reset();
     this.start();
   }
