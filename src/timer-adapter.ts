@@ -168,8 +168,9 @@ class Timer extends Device {
 }
 
 class Interval extends Device {
-  private seconds: number = 1;
+  private seconds: number = 0;
   private secondsProperty: Property;
+  private tickLength: number;
 
   constructor(adapter: Adapter, private interval: IntervalConfig) {
     super(adapter, `interval-${interval.id}`);
@@ -177,12 +178,13 @@ class Interval extends Device {
     this['@type'] = ['MultiLevelSensor'];
     this.name = interval.name;
     this.description = manifest.description;
+    this.tickLength = Math.min(interval.seconds / 10, 1)
 
     this.secondsProperty = this.createProperty({
       '@type': 'LevelProperty',
-      type: 'integer',
+      type: 'number',
       minimum: 0,
-      maximum: interval.seconds,
+      maximum: interval.seconds - this.tickLength,
       title: 'seconds',
       description: 'The number of seconds',
       readOnly: true
@@ -198,7 +200,7 @@ class Interval extends Device {
 
     setInterval(() => {
       this.tick();
-    }, 1000);
+    }, 1000 * this.tickLength);
   }
 
   createProperty(description: any) {
@@ -212,14 +214,11 @@ class Interval extends Device {
   }
 
   private tick() {
-    this.seconds++;
+    this.seconds += this.tickLength;
 
-    if (this.seconds == this.interval.seconds) {
+    if (this.seconds >= this.interval.seconds) {
       this.eventNotify(new Event(this, 'elapsed'));
-    }
-
-    if (this.seconds > this.interval.seconds) {
-      this.seconds = 1;
+      this.seconds = 0;
     }
 
     this.setSeconds(this.seconds);
