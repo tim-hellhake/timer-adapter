@@ -65,6 +65,33 @@
             }
           }
         },
+        "precisionTimers": {
+          "items": {
+            "properties": {
+              "name": {
+                "title": "The name of the timer",
+                "type": "string"
+              },
+              "id": {
+                "type": "string",
+                "title": "The ID of the timer (will be generated for you)",
+                "readOnly": true
+              },
+              "seconds": {
+                "title": "The number of seconds after which the timer should elapse",
+                "type": "number"
+              }
+            },
+            "required": [
+              "name",
+              "seconds"
+            ],
+            "title": "A Timer",
+            "type": "object"
+          },
+          "title": "List of precision timers (no ui updates but sub-second intervals)",
+          "type": "array"
+        },
         "intervals": {
           "type": "array",
           "title": "List of intervals",
