@@ -228,24 +228,27 @@ class PrecisionTimer extends Device {
 
 class Interval extends Device {
   private seconds: number = 1;
-  private secondsProperty: Property;
+  private secondsProperty?: Property;
 
-  constructor(adapter: Adapter, private interval: IntervalConfig) {
+  constructor(adapter: Adapter, private interval: IntervalConfig, progressBar: boolean) {
     super(adapter, `interval-${interval.id}`);
     this['@context'] = 'https://iot.mozilla.org/schemas/';
-    this['@type'] = ['MultiLevelSensor'];
     this.name = interval.name;
     this.description = manifest.description;
 
-    this.secondsProperty = this.createProperty({
-      '@type': 'LevelProperty',
-      type: 'integer',
-      minimum: 0,
-      maximum: interval.seconds,
-      title: 'seconds',
-      description: 'The number of seconds',
-      readOnly: true
-    });
+    if (progressBar) {
+      this['@type'] = ['MultiLevelSensor'];
+
+      this.secondsProperty = this.createProperty({
+        '@type': 'LevelProperty',
+        type: 'integer',
+        minimum: 0,
+        maximum: interval.seconds,
+        title: 'seconds',
+        description: 'The number of seconds',
+        readOnly: true
+      });
+    }
 
     this.events.set('elapsed', {
       name: 'elapsed',
@@ -267,7 +270,7 @@ class Interval extends Device {
   }
 
   private setSeconds(value: number) {
-    this.secondsProperty.setCachedValueAndNotify(value);
+    this.secondsProperty?.setCachedValueAndNotify(value);
   }
 
   private tick() {
@@ -346,7 +349,7 @@ export class TimerAdapter extends Adapter {
           interval.id = `${crypto.randomBytes(16).toString('hex')}`;
         }
 
-        this.intervals[interval.id] = new Interval(this, interval);
+        this.intervals[interval.id] = new Interval(this, interval, config.deactivateProgressBar !== true);
       }
     }
 
