@@ -138,7 +138,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@types/node": "^14.0.6",
+    "@types/node": "^14.0.9",
     "typescript": "^3.9.3"
   }
 }
