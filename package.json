@@ -1,7 +1,7 @@
 {
   "name": "timer-adapter",
   "display_name": "Timer",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Runs for the specified number of seconds",
   "main": "lib/index.js",
   "scripts": {

@@ -2,7 +2,7 @@
   "id": "timer-adapter",
   "name": "Timer",
   "short_name": "Timer",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Runs for the specified number of seconds",
   "homepage_url": "https://github.com/tim-hellhake/timer-adapter#readme",
   "author": "Tim Hellhake",
