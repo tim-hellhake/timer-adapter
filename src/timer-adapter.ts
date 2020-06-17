@@ -229,6 +229,7 @@ class PrecisionTimer extends Device {
 class Interval extends Device {
   private seconds: number = 1;
   private secondsProperty?: Property;
+  private activeProperty: Property;
 
   constructor(adapter: Adapter, private interval: IntervalConfig, progressBar: boolean) {
     super(adapter, `interval-${interval.id}`);
@@ -249,6 +250,12 @@ class Interval extends Device {
         readOnly: true
       });
     }
+
+    this.activeProperty = this.createProperty({
+      type: 'boolean',
+      title: 'active',
+      description: 'Whether the interval is active',
+    });
 
     this.events.set('elapsed', {
       name: 'elapsed',
@@ -273,10 +280,10 @@ class Interval extends Device {
     this.secondsProperty?.setCachedValueAndNotify(value);
   }
 
-  private tick() {
+  private async tick() {
     this.seconds++;
 
-    if (this.seconds == this.interval.seconds) {
+    if (this.seconds == this.interval.seconds && await this.activeProperty.getValue()) {
       this.eventNotify(new Event(this, 'elapsed'));
     }
 
