@@ -307,7 +307,7 @@ export class TimerAdapter extends Adapter {
       logging
     } = manifest.moziot.config;
 
-    if (logging.debug === true) {
+    if (logging?.debug === true) {
       debug = console.log;
     }
 
