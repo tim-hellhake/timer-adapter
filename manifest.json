@@ -33,7 +33,7 @@
               },
               "seconds": {
                 "title": "The number of seconds after which the timer should elapse",
-                "type": "string"
+                "type": "number"
               }
             },
             "required": [
@@ -94,7 +94,7 @@
                 "readOnly": true
               },
               "seconds": {
-                "type": "string",
+                "type": "number",
                 "title": "The number of seconds after which the interval should elapse"
               }
             }

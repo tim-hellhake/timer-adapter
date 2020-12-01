@@ -301,7 +301,7 @@ export class TimerAdapter extends Adapter {
   private intervals: { [key: string]: Interval } = {};
 
   constructor(addonManager: any, manifest: any) {
-    super(addonManager, TimerAdapter.name, manifest.id);
+    super(addonManager, TimerAdapter.name, manifest.name);
 
     const {
       logging
@@ -335,6 +335,8 @@ export class TimerAdapter extends Adapter {
         if (!timer.id) {
           timer.id = `${crypto.randomBytes(16).toString('hex')}`;
         }
+
+        timer.seconds = parseInt(`${timer.seconds}`);
 
         this.timers[timer.id] = new Timer(this, timer);
       }
