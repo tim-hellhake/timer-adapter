@@ -358,6 +358,8 @@ export class TimerAdapter extends Adapter {
           interval.id = `${crypto.randomBytes(16).toString('hex')}`;
         }
 
+        interval.seconds = parseInt(`${interval.seconds}`);
+
         this.intervals[interval.id] = new Interval(this, interval, config.deactivateProgressBar !== true);
       }
     }
